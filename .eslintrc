@@ -1,0 +1,86 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 5
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "next",
+    "airbnb",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
+    "next/core-web-vitals",
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    /**
+     * React
+     */
+    "import/extensions": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": [0],
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+
+    /**
+     * 緩和系
+     */
+    // フラグメント
+    "react/jsx-fragments": "off",
+    // ネストされた三項演算子
+    "no-nested-ternary": "off",
+    // Arrow Function
+    "react/function-component-definition": "off",
+    // defaultではないexport
+    "import/prefer-default-export": "off",
+    // propsの型チェック
+    "react/prop-types": "off",
+    // ラベルの強制
+    "jsx-a11y/control-has-associated-label": "off",
+    // videoのtrack要素の強制
+    "jsx-a11y/media-has-caption": "off",
+    // 短絡表記
+    "no-unused-expressions": ["warn", { "allowShortCircuit": true }],
+    // 未使用変数
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "argsIgnorePattern": "_",
+        "varsIgnorePattern": "_|React|createElement"
+      }
+    ],
+    // 型推論が可能な場合に型を省略する
+    "@typescript-eslint/no-inferrable-types": "off",
+    // any
+    "@typescript-eslint/no-explicit-any": "warn",
+    // useEffectの第二引数
+    "react-hooks/exhaustive-deps": "off",
+    // console
+    "no-console": ["error", { "allow": ["error", "info"] }],
+    // 名前無しfunction
+    "func-names": ["error", "always"],
+    // 変数の重複
+    "no-shadow": ["error", { "allow": ["_"] }],
+
+    /**
+     * 仮対応
+     */
+    // useMemoの推奨
+    "react/jsx-no-constructed-context-values": "off",
+    // キャメルケースのみの制限を暫定的に外す
+    "camelcase": ["off", { "properties": "always" }],
+    // アラート
+    "no-alert": "off"
+  }
+}
