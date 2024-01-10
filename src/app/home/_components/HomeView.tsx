@@ -1,10 +1,10 @@
-import { NextPage } from 'next';
 import Image from 'next/image';
+import { FC } from 'react';
 
 /**
- * Indexページ
+ * Homeページ/view
  */
-const IndexPage: NextPage = () => {
+const HomeView: FC = () => {
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-primary">
       <div className="w-3/5 h-auto p-5 pb-7 flex items-center aspect-square bg-secondary rounded-full">
@@ -14,4 +14,4 @@ const IndexPage: NextPage = () => {
   );
 };
 
-export default IndexPage;
+export default HomeView;

@@ -6,6 +6,7 @@ import IsNotMobile from './_components/IsNotMobile';
 export const metadata: Metadata = {
   title: 'MatsuribaNewYear🏮2024',
   description: 'MatsuribaNewYear🏮',
+  themeColor: '#D6453A',
 };
 
 type Props = {
@@ -18,7 +19,13 @@ type Props = {
 const RootLayout: NextPage<Props> = ({ children }) => {
   return (
     <html lang="ja">
-      <body>
+      <body
+        style={{
+          height: '100vh',
+          width: '100vw',
+          overflow: 'hidden',
+        }}
+      >
         <div className="sm:hidden">{children}</div>
         <div className="hidden sm:block">
           <IsNotMobile />
