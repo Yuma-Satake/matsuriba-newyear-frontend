@@ -1,17 +1,11 @@
 import { NextPage } from 'next';
-import Image from 'next/image';
+import HomeContainer from './home/_components/HomeContainer';
 
 /**
  * Indexページ
  */
 const IndexPage: NextPage = () => {
-  return (
-    <div className="w-screen h-screen flex justify-center items-center bg-primary">
-      <div className="w-3/5 h-auto p-5 pb-7 flex items-center aspect-square bg-secondary rounded-full">
-        <Image src="/logo.png" width={400} height={400} alt="MatsuribaTech" />
-      </div>
-    </div>
-  );
+  return <HomeContainer />;
 };
 
 export default IndexPage;

@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    branches: ['main', 'develop']
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    env:
+      # NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      # NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        run: |
+          npm i -g pnpm@8.10.2
+          pnpm i
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run ESLint
+        run: pnpm dlx eslint ./src --ext .js,.jsx,.ts,.tsx
+        continue-on-error: true
