@@ -11,7 +11,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'MatsuribaNewYear🏮2024',
-  description: 'MatsuribaNewYear🏮',
+  description: 'Matsuribaでデジタル絵馬を奉納して、2024年を良い年にしよう！',
+  applicationName: 'MatsuribaNewYear🏮2024',
+  authors: {
+    name: 'Yuma-Satake',
+    url: 'https://twitter.com/yuma_satake22',
+  },
+  icons: '/icon.png',
 };
 
 type Props = {
