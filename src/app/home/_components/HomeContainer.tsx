@@ -12,14 +12,30 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-// import { insertAspiration } from '@/lib/supabaseFn';
+import { insertAspiration } from '@/lib/supabaseFn';
+import Image from 'next/image';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useRouter } from 'next/navigation';
 import HomeView from './HomeView';
 import { EmaFormType } from './types/EmaFormType';
+
+const COMPLEAT_DISTANCE = 150;
 
 /**
  * Homeページ/container
  */
 const HomeContainer: FC = () => {
+  const router = useRouter();
+
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const [isFinishedInput, setIsFinishedInput] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -36,6 +52,7 @@ const HomeContainer: FC = () => {
   };
 
   const [isComplete, setIsComplete] = useState(false);
+  const [movement, setMovement] = useState(0);
   const [startY, setStartY] = useState(0);
 
   const handleTouchStart = (e: TouchEvent<HTMLDivElement> | undefined) => {
@@ -44,33 +61,105 @@ const HomeContainer: FC = () => {
   };
 
   const handleTouchMove = (e: TouchEvent<HTMLDivElement> | undefined) => {
-    if (!e) return;
+    if (!e || isComplete || !isFinishedInput) return;
     const endY = e.touches[0].clientY;
-    if (startY - endY > 100) {
+    const diff = startY - endY;
+
+    if (diff < 0) return;
+    setMovement(diff);
+
+    if (diff > COMPLEAT_DISTANCE) {
       setIsComplete(true);
+      setMovement(250);
     }
+  };
+
+  const handleTouchEnd = () => {
+    if (isComplete) return;
+    setMovement(0);
+  };
+
+  const handleBackHome = () => {
+    router.push('/home');
+    setIsOpenDialog(false);
+    setIsFinishedInput(false);
+    setIsDrawerOpen(false);
+    setIsComplete(false);
+    setMovement(0);
+    setStartY(0);
+    setFormValue({
+      aspiration: '',
+      name: '',
+    });
   };
 
   useEffect(() => {
     if (isComplete) {
-      // (async () => {
-      //   await insertAspiration(formValue);
-      // })();
+      (async () => {
+        await insertAspiration(formValue);
+        setTimeout(() => {
+          setIsOpenDialog(true);
+        }, 1000);
+      })();
     }
   }, [isComplete]);
 
   return (
     <>
       <div
+        style={{
+          opacity: isFinishedInput ? 1 : 0,
+          pointerEvents: isFinishedInput ? 'auto' : 'none',
+          transition: isComplete ? 'top 1s ease-in-out' : 'top 0.3s ease-in-out',
+          position: 'fixed',
+          top: -movement * 10,
+        }}
+      >
+        <div style={{ marginTop: '-30px', paddingBottom: '30px' }}>
+          <Image
+            src="/ema.png"
+            width={500}
+            height={500}
+            alt="絵馬"
+            priority
+            style={{ pointerEvents: 'none' }}
+          />
+          <div>
+            <Textarea
+              value={formValue.aspiration}
+              className="text-center border-none text-xl font-bold px-12"
+              placeholder="2024年の抱負"
+              readOnly
+              rows={2}
+              style={{
+                marginTop: '-130px',
+                minHeight: '4.5em',
+                backgroundColor: 'transparent',
+                pointerEvents: 'none',
+              }}
+            />
+          </div>
+          <Textarea
+            value={formValue.name}
+            readOnly
+            className="text-end border-none text-base font-bold px-12"
+            style={{
+              marginTop: '-8px',
+              minHeight: '1.5em',
+              backgroundColor: 'transparent',
+              pointerEvents: 'none',
+            }}
+          />
+        </div>
+      </div>
+      <div
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
-        // style={{
-        //   position: isFinishedInput ? 'fixed' : 'relative',
-        //   top: isFinishedInput ? startY : 'auto',
-        //   display: isComplete ? 'none' : 'block',
-        // }}
+        onTouchEnd={handleTouchEnd}
+        style={{ height: '100vh' }}
       >
         <HomeView
+          isComplete={isComplete}
           value={formValue}
           isFinishedInput={isFinishedInput}
           onDrawerOpen={() => setIsDrawerOpen(true)}
@@ -102,7 +191,6 @@ const HomeContainer: FC = () => {
               onClick={() => {
                 setIsFinishedInput(true);
                 setIsDrawerOpen(false);
-                setIsComplete(true);
               }}
               variant="default"
               className="text-white"
@@ -121,6 +209,24 @@ const HomeContainer: FC = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      <AlertDialog open={isOpenDialog}>
+        <AlertDialogContent
+          style={{
+            transition: 'opacity 5s ease-in-out',
+            opacity: isComplete ? 1 : 0,
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>絵馬の奉納が完了しました</AlertDialogTitle>
+            <AlertDialogDescription>今年もMatsuribaをよろしくお願い致します</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction className="text-white" onClick={handleBackHome}>
+              ホームに戻る
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

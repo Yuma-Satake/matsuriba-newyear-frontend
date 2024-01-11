@@ -1,12 +1,17 @@
-import type { Metadata, NextPage } from 'next';
+import type { Metadata, NextPage, Viewport } from 'next';
 import './globals.css';
 import { ReactNode } from 'react';
 import IsNotMobile from './_components/IsNotMobile';
 
+export const viewport: Viewport = {
+  themeColor: '#D6453A',
+  userScalable: false,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   title: 'MatsuribaNewYear🏮2024',
   description: 'MatsuribaNewYear🏮',
-  themeColor: '#D6453A',
 };
 
 type Props = {

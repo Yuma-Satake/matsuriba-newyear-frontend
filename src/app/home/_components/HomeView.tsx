@@ -9,6 +9,7 @@ import { H2, H3 } from '@/components/typography/Typography';
 import { EmaFormType } from './types/EmaFormType';
 
 type Props = {
+  isComplete: boolean;
   value: EmaFormType;
   isFinishedInput: boolean;
   onDrawerOpen: () => void;
@@ -17,21 +18,34 @@ type Props = {
 /**
  * Homeページ/view
  */
-const HomeView: FC<Props> = ({ value: { aspiration, name }, isFinishedInput, onDrawerOpen }) => {
+const HomeView: FC<Props> = ({
+  isComplete,
+  value: { aspiration, name },
+  isFinishedInput,
+  onDrawerOpen,
+}) => {
   const [top, setTop] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTop((prevTop) => (prevTop === 0 ? 10 : 0));
+      if (isFinishedInput || isComplete) return;
+      setTop((prevTop) => (prevTop === 0 ? 12 : 0));
     }, 500);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <>
-      <div style={{ height: '50vh' }}>
+      <div style={{ height: '50vh', opacity: isFinishedInput ? 0 : 1 }}>
         <div style={{ marginTop: '-30px', paddingBottom: '30px' }}>
-          <Image src="/ema.png" width={500} height={500} alt="絵馬" />
+          <Image
+            src="/ema.png"
+            width={500}
+            height={500}
+            alt="絵馬"
+            priority
+            style={{ pointerEvents: 'none' }}
+          />
           <div>
             <Textarea
               value={aspiration}
@@ -88,14 +102,15 @@ const HomeView: FC<Props> = ({ value: { aspiration, name }, isFinishedInput, onD
           </div>
         </div>
       ) : (
-        <div className="space-y-3 mt-16">
-          <div
-            className="flex justify-center"
-            style={{
-              transition: 'padding-top 1s ease-in-out',
-              paddingTop: top,
-            }}
-          >
+        <div
+          className="space-y-3 mt-16"
+          style={{
+            transition: 'padding-top 1s ease-in-out, opacity 1s ease-in-out',
+            paddingTop: isComplete ? 0 : top,
+            opacity: isComplete ? 0 : 1,
+          }}
+        >
+          <div className="flex justify-center">
             <DoubleArrowIcon
               style={{
                 rotate: '270deg',
@@ -106,7 +121,7 @@ const HomeView: FC<Props> = ({ value: { aspiration, name }, isFinishedInput, onD
           </div>
           <div>
             <H3 isCenter color="white">
-              絵馬をスワイプして奉納
+              スワイプして絵馬を奉納
             </H3>
           </div>
         </div>
