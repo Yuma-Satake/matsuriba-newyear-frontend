@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, TouchEvent, useState } from 'react';
+import { FC, TouchEvent, useEffect, useState } from 'react';
 import { FormChangeEvent } from '@/types/eventType';
 import {
   Drawer,
@@ -12,6 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+// import { insertAspiration } from '@/lib/supabaseFn';
 import HomeView from './HomeView';
 import { EmaFormType } from './types/EmaFormType';
 
@@ -50,16 +51,24 @@ const HomeContainer: FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (isComplete) {
+      // (async () => {
+      //   await insertAspiration(formValue);
+      // })();
+    }
+  }, [isComplete]);
+
   return (
     <>
       <div
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
-        style={{
-          position: isFinishedInput ? 'fixed' : 'relative',
-          top: isFinishedInput ? 'auto' : startY,
-          display: isComplete ? 'none' : 'block',
-        }}
+        // style={{
+        //   position: isFinishedInput ? 'fixed' : 'relative',
+        //   top: isFinishedInput ? startY : 'auto',
+        //   display: isComplete ? 'none' : 'block',
+        // }}
       >
         <HomeView
           value={formValue}
@@ -93,6 +102,7 @@ const HomeContainer: FC = () => {
               onClick={() => {
                 setIsFinishedInput(true);
                 setIsDrawerOpen(false);
+                setIsComplete(true);
               }}
               variant="default"
               className="text-white"

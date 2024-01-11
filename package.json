@@ -6,7 +6,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "build": "next lint && next build",
-    "start": "next start"
+    "start": "next start",
+    "typeGenerate": "supabase gen types typescript --project-id kbgailiurbpmhbumrbug > ./src/types/database.types.ts && prettier --write ./src/types/database.types.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -15,6 +16,7 @@
     "@mui/material": "^5.15.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
+    "@supabase/supabase-js": "^2.39.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.308.0",

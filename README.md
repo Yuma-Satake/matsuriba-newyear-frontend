@@ -2,6 +2,12 @@
 
 ### Getting Started
 
+env
+
+```zsh
+cp .env.template .env.local
+```
+
 install
 
 ```zsh
@@ -18,4 +24,10 @@ build
 
 ```zsh
 pnpm build
+```
+
+generate types
+
+```zsh
+pnpm typeGenerate
 ```

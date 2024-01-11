@@ -1,11 +1,20 @@
+'use client';
+
 import { NextPage } from 'next';
-import HomeContainer from './home/_components/HomeContainer';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 /**
  * Indexページ
  */
 const IndexPage: NextPage = () => {
-  return <HomeContainer />;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/home');
+  }, []);
+
+  return null;
 };
 
 export default IndexPage;
