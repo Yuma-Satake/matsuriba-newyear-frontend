@@ -2,7 +2,7 @@
  * 絵馬のフォーム
  */
 export type EmaFormType = {
-  body: string;
+  aspiration: string;
   name?: string;
 };
 
