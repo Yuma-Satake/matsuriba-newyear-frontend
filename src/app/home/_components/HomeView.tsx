@@ -1,17 +1,25 @@
-import Image from 'next/image';
 import { FC } from 'react';
+import TitleView from '@/app/home/_components/TitleView';
+import { HandleSteps } from '@/hooks/useSteps';
+import DescriptionView from './DescriptionView';
+
+type Props = {
+  step: number;
+  handleSteps: HandleSteps;
+};
 
 /**
  * Homeページ/view
  */
-const HomeView: FC = () => {
-  return (
-    <div className="w-screen h-screen flex justify-center items-center bg-primary">
-      <div className="w-3/5 h-auto p-5 pb-7 flex items-center aspect-square bg-secondary rounded-full">
-        <Image src="/logo.png" width={400} height={400} alt="MatsuribaTech" />
-      </div>
-    </div>
-  );
+const HomeView: FC<Props> = ({ step, handleSteps }) => {
+  switch (step) {
+    case 0:
+      return <TitleView onClickNext={handleSteps.next} />;
+    case 1:
+      return <DescriptionView onClickNext={handleSteps.next} />;
+    default:
+      return null;
+  }
 };
 
 export default HomeView;
