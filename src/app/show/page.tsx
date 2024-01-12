@@ -56,7 +56,10 @@ const HomePage: NextPage = () => {
               {_emaList.map((item) => {
                 return (
                   <div key={`${item.aspiration}+${item.name}`} className={Styles.embla__slide}>
-                    <div style={{ marginTop: '-30px', paddingBottom: '30px' }} className={Styles.card}>
+                    <div
+                      style={{ marginTop: '-30px', paddingBottom: '30px' }}
+                      className={Styles.card}
+                    >
                       <Image
                         src="/ema.png"
                         width={500}
