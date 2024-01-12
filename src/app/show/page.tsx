@@ -1,24 +1,22 @@
+'use client';
+
 import { H1 } from '@/components/typography/Typography';
 import { supabase } from '@/lib/supabaseFn';
 import { NextPage } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
+import Styles from './page.module.css';
 import { EmaFormType } from '../home/_components/types/EmaFormType';
-// import {
-//   Carousel,
-//   CarouselContent,
-//   CarouselItem,
-//   CarouselNext,
-//   CarouselPrevious,
-// } from '@/components/ui/carousel';
 
 /**
  * Homeページ
  */
 const HomePage: NextPage = () => {
-  //   const [api, setApi] = useState<CarouselApi>();
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
   const [_emaList, setEmaList] = useState<EmaFormType[]>([]);
-
   supabase
     .channel('aspirationTable')
     .on(
@@ -42,7 +40,7 @@ const HomePage: NextPage = () => {
           Matsuriba神社🏮
         </H1>
       </div>
-      <div className="flex justify-center items-center h-5/6 bg-secondary">
+      <div className="flex justify-center items-center h-5/6 bg-secondary relative">
         <Image
           src="/zinzya.png"
           width={500}
@@ -52,19 +50,55 @@ const HomePage: NextPage = () => {
             width: '60vw',
           }}
         />
-      </div>
-      <div>
-        {/* <Carousel setApi={setApi}>
-          <CarouselContent>
-            {emaList.map((item) => {
-              return (
-                <CarouselItem key={`${item.aspiration}+${item.name}`}>
-                  {item.aspiration}
-                </CarouselItem>
-              );
-            })}
-          </CarouselContent>
-        </Carousel> */}
+        <div className={`h-full absolute w-full grid place-items-center ${Styles.embla}`}>
+          <div ref={emblaRef} className={Styles.embla__viewport}>
+            <div className={Styles.embla__container}>
+              {_emaList.map((item) => {
+                return (
+                  <div key={`${item.aspiration}+${item.name}`} className={Styles.embla__slide}>
+                    <div style={{ marginTop: '-30px', paddingBottom: '30px' }} className={Styles.card}>
+                      <Image
+                        src="/ema.png"
+                        width={500}
+                        height={500}
+                        alt="絵馬"
+                        priority
+                        style={{ pointerEvents: 'none' }}
+                        className={Styles.image}
+                      />
+                      <div>
+                        <Textarea
+                          value={item.aspiration}
+                          className="text-center border-none text-xl font-bold px-12 resize-none"
+                          placeholder="2024年の抱負"
+                          readOnly
+                          rows={2}
+                          style={{
+                            marginTop: '-130px',
+                            minHeight: '4.5em',
+                            backgroundColor: 'transparent',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      </div>
+                      <Textarea
+                        value={item.name}
+                        readOnly
+                        className="text-end border-none text-base font-bold px-12 resize-none"
+                        style={{
+                          marginTop: '-8px',
+                          minHeight: '1.5em',
+                          backgroundColor: 'transparent',
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
