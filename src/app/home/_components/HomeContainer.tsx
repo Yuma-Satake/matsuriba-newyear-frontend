@@ -182,7 +182,7 @@ const HomeContainer: FC = () => {
               value={formValue.name}
               onChange={handleInput}
               name="name"
-              placeholder="名前"
+              placeholder="名前（任意）"
               className="w-full"
             />
           </div>
@@ -194,7 +194,7 @@ const HomeContainer: FC = () => {
               }}
               variant="default"
               className="text-white"
-              disabled={!formValue.aspiration || !formValue.name}
+              disabled={!formValue.aspiration}
             >
               奉納する
             </Button>
