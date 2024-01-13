@@ -29,7 +29,30 @@ export interface Database {
       };
     };
     Views: {
-      [_ in never]: never;
+      randomaspirationview: {
+        Row: {
+          aspiration: string | null;
+          createdAt: string | null;
+          id: number | null;
+          isWebAccess: boolean | null;
+          name: string | null;
+        };
+        Insert: {
+          aspiration?: string | null;
+          createdAt?: string | null;
+          id?: number | null;
+          isWebAccess?: boolean | null;
+          name?: string | null;
+        };
+        Update: {
+          aspiration?: string | null;
+          createdAt?: string | null;
+          id?: number | null;
+          isWebAccess?: boolean | null;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       [_ in never]: never;

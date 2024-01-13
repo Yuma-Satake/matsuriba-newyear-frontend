@@ -28,22 +28,17 @@ export const insertAspiration: InsertAspiration = async ({ aspiration, name }) =
 
 type GetAspiration = ({
   limit,
-  range,
 }: {
   limit: number;
-  range: { start: number; end: number };
-}) => Promise<Database['public']['Tables']['aspirationTable']['Row'][]>;
+}) => Promise<Database['public']['Views']['randomaspirationview']['Row'][]>;
 /**
- * aspirationTableからデータを取得する関数
-
+ * randomAspirationViewからデータを取得する関数
  * - range{start: number, end: number}
  */
-export const getAspiration: GetAspiration = async ({ limit, range }) => {
+export const getAspiration: GetAspiration = async ({ limit }) => {
   const { data: aspirationData, error: aspirationError } = await supabase
-    .from('aspirationTable')
+    .from('randomaspirationview')
     .select('*')
-    .order('id', { ascending: false })
-    .range(range.start, range.end)
     .limit(limit);
 
   if (aspirationError) {

@@ -8,10 +8,22 @@ import { useEffect, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { Database } from '@/types/database.types';
 import Styles from './page.module.css';
 import { EmaFormType } from '../home/_components/types/EmaFormType';
 
 const LIMIT = 10;
+
+const convertToEmaFormType = (
+  data: Database['public']['Views']['randomaspirationview']['Row'][]
+): EmaFormType[] => {
+  return data.map((item) => {
+    return {
+      name: item.name ?? '名無し',
+      aspiration: item.aspiration ?? '',
+    };
+  });
+};
 
 /**
  * Homeページ
@@ -19,46 +31,32 @@ const LIMIT = 10;
 const HomePage: NextPage = () => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
   const [emaList, setEmaList] = useState<EmaFormType[]>([]);
-  const [rangeStart, setRangeStart] = useState(0);
 
   /**
    * - 初回のみ、絵馬を取得する
    * - 30秒に1回、絵馬を取得する
    */
   useEffect(() => {
+    (async () => {
+      const emas = await getAspiration({
+        limit: LIMIT,
+      });
+      setEmaList(convertToEmaFormType(emas));
+    })();
+
     const interval = setInterval(() => {
       (async () => {
         const newEmas = await getAspiration({
           limit: LIMIT,
-          range: {
-            start: rangeStart,
-            end: rangeStart + LIMIT,
-          },
         });
         if (newEmas.length === 0) {
-          setRangeStart(0);
           return;
         }
 
-        setEmaList(newEmas);
-        setRangeStart((prev) => prev + LIMIT);
+        setEmaList(convertToEmaFormType(newEmas));
       })();
     }, 30000);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const newEmas = await getAspiration({
-        limit: LIMIT,
-        range: {
-          start: rangeStart,
-          end: rangeStart + LIMIT,
-        },
-      });
-      setEmaList(newEmas);
-      setRangeStart((prev) => prev + LIMIT);
-    })();
   }, []);
 
   // supabase
