@@ -80,7 +80,7 @@ const HomeContainer: FC = () => {
   };
 
   const handleBackHome = () => {
-    router.push('/home');
+    router.push('/show');
     setIsOpenDialog(false);
     setIsFinishedInput(false);
     setIsDrawerOpen(false);
@@ -222,7 +222,7 @@ const HomeContainer: FC = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction className="text-white" onClick={handleBackHome}>
-              ホームに戻る
+              他の人の絵馬を見る
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

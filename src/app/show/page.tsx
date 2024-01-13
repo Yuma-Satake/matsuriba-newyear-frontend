@@ -1,43 +1,87 @@
 'use client';
 
 import { H1 } from '@/components/typography/Typography';
-import { supabase } from '@/lib/supabaseFn';
+import { getAspiration } from '@/lib/supabaseFn';
 import { NextPage } from 'next';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import Styles from './page.module.css';
 import { EmaFormType } from '../home/_components/types/EmaFormType';
 
+const LIMIT = 10;
+
 /**
  * Homeページ
  */
 const HomePage: NextPage = () => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
-  const [_emaList, setEmaList] = useState<EmaFormType[]>([]);
-  supabase
-    .channel('aspirationTable')
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'aspirationTable',
-      },
-      (payload) => {
-        const newValue = payload.new as EmaFormType;
-        setEmaList((prev) => [...prev, newValue]);
-      }
-    )
-    .subscribe();
+  const [emaList, setEmaList] = useState<EmaFormType[]>([]);
+  const [rangeStart, setRangeStart] = useState(0);
+
+  /**
+   * - 初回のみ、絵馬を取得する
+   * - 30秒に1回、絵馬を取得する
+   */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      (async () => {
+        const newEmas = await getAspiration({
+          limit: LIMIT,
+          range: {
+            start: rangeStart,
+            end: rangeStart + LIMIT,
+          },
+        });
+        if (newEmas.length === 0) {
+          setRangeStart(0);
+          return;
+        }
+
+        setEmaList(newEmas);
+        setRangeStart((prev) => prev + LIMIT);
+      })();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const newEmas = await getAspiration({
+        limit: LIMIT,
+        range: {
+          start: rangeStart,
+          end: rangeStart + LIMIT,
+        },
+      });
+      setEmaList(newEmas);
+      setRangeStart((prev) => prev + LIMIT);
+    })();
+  }, []);
+
+  // supabase
+  //   .channel('aspirationTable')
+  //   .on(
+  //     'postgres_changes',
+  //     {
+  //       event: 'INSERT',
+  //       schema: 'public',
+  //       table: 'aspirationTable',
+  //     },
+  //     (payload) => {
+  //       const newValue = payload.new as EmaFormType;
+  //       setEmaList((prev) => [...prev, newValue]);
+  //     }
+  //   )
+  //   .subscribe();
 
   return (
     <>
       <div className="flex justify-center bg-primary h-1/6 items-center">
-        <H1 isCenter color="white" className=" text-7xl">
-          Matsuriba神社🏮
+        <H1 isCenter color="white" className=" text-5xl">
+          &nbsp;Matsuriba神社🏮
         </H1>
       </div>
       <div className="flex justify-center items-center h-5/6 bg-secondary relative">
@@ -47,13 +91,13 @@ const HomePage: NextPage = () => {
           height={500}
           alt="神社"
           style={{
-            width: '60vw',
+            width: '70vw',
           }}
         />
         <div className={`h-full absolute w-full grid place-items-center ${Styles.embla}`}>
           <div ref={emblaRef} className={Styles.embla__viewport}>
             <div className={Styles.embla__container}>
-              {_emaList.map((item) => {
+              {emaList.map((item) => {
                 return (
                   <div key={`${item.aspiration}+${item.name}`} className={Styles.embla__slide}>
                     <div

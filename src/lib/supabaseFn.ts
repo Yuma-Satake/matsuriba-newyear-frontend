@@ -25,3 +25,30 @@ export const insertAspiration: InsertAspiration = async ({ aspiration, name }) =
     throw insertAspirationError;
   }
 };
+
+type GetAspiration = ({
+  limit,
+  range,
+}: {
+  limit: number;
+  range: { start: number; end: number };
+}) => Promise<Database['public']['Tables']['aspirationTable']['Row'][]>;
+/**
+ * aspirationTableからデータを取得する関数
+
+ * - range{start: number, end: number}
+ */
+export const getAspiration: GetAspiration = async ({ limit, range }) => {
+  const { data: aspirationData, error: aspirationError } = await supabase
+    .from('aspirationTable')
+    .select('*')
+    .order('id', { ascending: false })
+    .range(range.start, range.end)
+    .limit(limit);
+
+  if (aspirationError) {
+    throw aspirationError;
+  }
+
+  return aspirationData;
+};

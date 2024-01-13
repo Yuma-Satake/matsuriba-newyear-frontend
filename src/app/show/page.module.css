@@ -21,7 +21,7 @@
   display: grid;
   place-items: center;
 }
-.card{
+.card {
   aspect-ratio: 500/480;
   width: 400px;
 }

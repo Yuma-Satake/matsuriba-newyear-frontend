@@ -86,17 +86,18 @@ const HomeView: FC<Props> = ({
               variant="secondary"
               className="w-screen mx-8 bg-white space-x-1 border-none"
             >
-              <p>絵馬を書く</p>
+              <p>Webで奉納</p>
               <EditIcon fontSize="small" />
             </Button>
           </div>
           <div className="flex justify-center items-center">
             <Button
+              disabled
               size="lg"
               variant="secondary"
               className="w-screen mx-8 bg-white space-x-1 border-none"
             >
-              <p>APIを見る</p>
+              <p>APIで奉納</p>
               <SearchIcon fontSize="small" />
             </Button>
           </div>
